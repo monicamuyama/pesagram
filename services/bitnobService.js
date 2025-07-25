@@ -140,6 +140,17 @@ class BitnobAPIService {
     }
   }
 
+  // KYC submission endpoint (pseudo, adapt to Bitnob API)
+  async submitKYC(kycPayload) {
+    try {
+      // Replace with actual Bitnob endpoint and payload structure
+      const response = await this.client.post('/v1/kyc/submit', kycPayload);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error, 'KYC submission failed');
+    }
+  }
+
   // Error handler
   handleError(error, defaultMessage) {
     if (error.response) {

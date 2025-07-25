@@ -3,8 +3,12 @@ const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const { generateToken } = require('../middleware/auth');
 const bitnobService = require('../services/bitnobService');
+const crypto = require('crypto');
 
 const router = express.Router();
+
+// In-memory store for OTPs (replace with Redis or DB in production)
+const otpStore = {};
 
 // Validation middleware
 const validateRegistration = [
@@ -97,6 +101,7 @@ router.post('/signup', validateRegistration, handleValidationErrors, async (req,
           firstName: localUser.firstName,
           lastName: localUser.lastName,
           phone: localUser.phone,
+          isKycVerified: false,
           createdAt: localUser.createdAt
         },
         token: token
@@ -162,6 +167,7 @@ router.post('/signin', validateLogin, handleValidationErrors, async (req, res, n
           firstName: demoUser.firstName,
           lastName: demoUser.lastName,
           phone: demoUser.phone,
+          isKycVerified: false,
           createdAt: demoUser.createdAt
         },
         token: token
@@ -184,6 +190,46 @@ router.post('/logout', (req, res) => {
     success: true,
     message: 'Logout successful'
   });
+});
+
+// POST /api/auth/request-2fa - Request OTP for sensitive action
+router.post('/request-2fa', require('../middleware/auth').authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const email = req.user.email;
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // Store OTP with expiry (5 min)
+    otpStore[userId] = { otp, expires: Date.now() + 5 * 60 * 1000 };
+    // TODO: Send OTP via email (stub)
+    console.log(`2FA OTP for ${email}: ${otp}`);
+    res.status(200).json({ success: true, message: 'OTP sent to your email.' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Failed to send OTP', details: err.message });
+  }
+});
+
+// POST /api/auth/verify-2fa - Verify OTP for sensitive action
+router.post('/verify-2fa', require('../middleware/auth').authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { otp } = req.body;
+    const record = otpStore[userId];
+    if (!record || !otp) {
+      return res.status(400).json({ success: false, error: 'OTP not requested or missing.' });
+    }
+    if (Date.now() > record.expires) {
+      delete otpStore[userId];
+      return res.status(400).json({ success: false, error: 'OTP expired.' });
+    }
+    if (record.otp !== otp) {
+      return res.status(400).json({ success: false, error: 'Invalid OTP.' });
+    }
+    delete otpStore[userId];
+    res.status(200).json({ success: true, message: 'OTP verified.' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Failed to verify OTP', details: err.message });
+  }
 });
 
 // GET /api/auth/verify - Verify JWT token

@@ -378,6 +378,67 @@ router.post('/logout', (req, res) => {
   });
 });
 
+// POST /api/auth/request-2fa - Request OTP for 2FA
+router.post('/request-2fa', require('../middleware/auth').authenticateToken, async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    
+    console.log(`🔐 2FA OTP request for user: ${userId}`);
+    
+    // TODO: Generate and send OTP via SMS/Email
+    // For demo purposes, we'll simulate success
+    const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+    
+    // In production, you would:
+    // 1. Store OTP in Redis/database with expiration
+    // 2. Send via SMS/Email service
+    // await sendSMS(user.phone, `Your Pesagram OTP: ${otp}`);
+    
+    console.log(`📱 Demo OTP generated: ${otp} (for user: ${userId})`);
+    
+    res.status(200).json({
+      success: true,
+      message: 'OTP sent successfully',
+      // Remove this in production - only for demo
+      debug_otp: process.env.NODE_ENV === 'development' ? otp : undefined
+    });
+
+  } catch (error) {
+    console.error('❌ 2FA OTP request error:', error.message);
+    next(error);
+  }
+});
+
+// POST /api/auth/verify-2fa - Verify OTP for 2FA
+router.post('/verify-2fa', require('../middleware/auth').authenticateToken, [
+  body('otp').isLength({ min: 6, max: 6 }).withMessage('OTP must be 6 digits')
+], handleValidationErrors, async (req, res, next) => {
+  try {
+    const { otp } = req.body;
+    const userId = req.user.userId;
+    
+    console.log(`🔐 2FA OTP verification for user: ${userId}, OTP: ${otp}`);
+    
+    // TODO: Verify OTP from Redis/database
+    // For demo purposes, accept any 6-digit OTP
+    if (otp.length === 6 && /^\d{6}$/.test(otp)) {
+      res.status(200).json({
+        success: true,
+        message: 'OTP verified successfully'
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        error: 'Invalid OTP'
+      });
+    }
+
+  } catch (error) {
+    console.error('❌ 2FA OTP verification error:', error.message);
+    next(error);
+  }
+});
+
 // GET /api/auth/verify - Verify JWT token
 router.get('/verify', require('../middleware/auth').authenticateToken, (req, res) => {
   res.status(200).json({

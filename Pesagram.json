@@ -1,11 +1,11 @@
 {
   "info": {
-    "name": "Monikhangu API - Improved Bitnob Integration",
-    "description": "Comprehensive API testing collection for Monikhangu e-banking system with proper Bitnob integration",
+    "name": "Pesagram API - Improved Bitnob Integration",
+    "description": "Comprehensive API testing collection for Pesagram e-banking system with proper Bitnob integration",
     "version": "2.0.0",
     "contact": {
-      "name": "Monikhangu Development Team",
-      "email": "dev@monikhangu.com"
+      "name": "Pesagram Development Team",
+      "email": "dev@pesagram.com"
     }
   },
   "variable": [

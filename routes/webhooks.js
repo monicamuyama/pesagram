@@ -1,5 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
+const User = require('../models/User');
 
 const router = express.Router();
 
@@ -229,16 +230,11 @@ async function handleWalletDebited(data) {
 async function handleKYCApproved(data) {
   try {
     console.log(`✅ KYC approved for customer: ${data.customer_id}`);
-    
-    // TODO: Update user KYC status
-    // await User.update(
-    //   { kycStatus: 'approved' },
-    //   { where: { bitnobCustomerId: data.customer_id } }
-    // );
-
+    await User.findOneAndUpdate(
+      { bitnobCustomerId: data.customer_id },
+      { kycStatus: 'approved', kycRejectionReason: null }
+    );
     // TODO: Send congratulations notification
-    // TODO: Enable additional features
-
   } catch (error) {
     console.error('❌ Error handling KYC approved:', error);
   }
@@ -247,18 +243,11 @@ async function handleKYCApproved(data) {
 async function handleKYCRejected(data) {
   try {
     console.log(`❌ KYC rejected for customer: ${data.customer_id}`);
-    
-    // TODO: Update user KYC status
-    // await User.update(
-    //   { 
-    //     kycStatus: 'rejected',
-    //     kycRejectionReason: data.reason
-    //   },
-    //   { where: { bitnobCustomerId: data.customer_id } }
-    // );
-
+    await User.findOneAndUpdate(
+      { bitnobCustomerId: data.customer_id },
+      { kycStatus: 'rejected', kycRejectionReason: data.reason || 'Unknown reason' }
+    );
     // TODO: Send notification with next steps
-
   } catch (error) {
     console.error('❌ Error handling KYC rejected:', error);
   }

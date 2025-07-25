@@ -27,7 +27,9 @@ router.get('/', async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: 'Wallets retrieved successfully',
-      data: walletsResponse
+      data: {
+        wallets: walletsResponse.data || walletsResponse || []
+      }
     });
 
   } catch (error) {

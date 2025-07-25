@@ -11,6 +11,9 @@ const authRoutes = require('./routes/auth');
 const walletRoutes = require('./routes/wallet');
 const transactionRoutes = require('./routes/transaction');
 const userRoutes = require('./routes/user');
+const kycRoutes = require('./routes/kyc');
+const mobileMoneyRoutes = require('./routes/mobileMoney');
+const recurringPaymentsRoutes = require('./routes/recurringPayments');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -67,6 +70,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/wallet', authenticateToken, walletRoutes);
 app.use('/api/transaction', authenticateToken, transactionRoutes);
 app.use('/api/user', authenticateToken, userRoutes);
+app.use('/api/kyc', authenticateToken, kycRoutes);
+app.use('/api/mobile-money', authenticateToken, mobileMoneyRoutes);
+app.use('/api/recurring-payments', authenticateToken, recurringPaymentsRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
