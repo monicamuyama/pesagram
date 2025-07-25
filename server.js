@@ -6,6 +6,9 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
+// Import database connection
+const { connectToDatabase } = require('./lib/database');
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const walletRoutes = require('./routes/wallet');
@@ -86,18 +89,34 @@ app.use('*', (req, res) => {
 app.use(errorHandler);
 
 // Start server
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Pesagram Backend Server running on port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🌐 Health check: http://localhost:${PORT}/health`);
-});
+const startServer = async () => {
+  try {
+    // Connect to database
+    await connectToDatabase();
+    
+    const server = app.listen(PORT, () => {
+      console.log(`🚀 Pesagram Backend Server running on port ${PORT}`);
+      console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🌐 Health check: http://localhost:${PORT}/health`);
+      console.log(`🗄️ Database: Connected to MongoDB Atlas`);
+    });
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
-  server.close(() => {
-    console.log('Process terminated');
-  });
-});
+    // Graceful shutdown
+    process.on('SIGTERM', () => {
+      console.log('SIGTERM received, shutting down gracefully');
+      server.close(() => {
+        console.log('Process terminated');
+      });
+    });
+
+    return server;
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+// Start the server
+startServer();
 
 module.exports = app;

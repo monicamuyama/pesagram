@@ -71,6 +71,7 @@ typings/
 .env.local
 .env.production
 .env.template
+.env.example
 
 
 # parcel-bundler cache (https://parceljs.org/)

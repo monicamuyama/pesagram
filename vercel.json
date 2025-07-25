@@ -3,18 +3,18 @@
   "name": "pesagram-api",
   "builds": [
     {
-      "src": "api/**/*.js",
+      "src": "server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/(.*)",
+      "dest": "/server.js"
     }
   ],
   "functions": {
-    "api/**/*.js": {
+    "server.js": {
       "maxDuration": 10
     }
   },
@@ -24,7 +24,7 @@
   "regions": ["iad1"],
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
