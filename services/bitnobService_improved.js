@@ -96,7 +96,7 @@ class BitnobAPIService {
 
   async createCryptoWallet(walletData) {
     try {
-      const response = await this.client.post('/v1/wallets', {
+      const response = await this.client.post('/v1/wallets/create-new-crypto-wallet', {
         currency: walletData.currency,
         label: walletData.label || `${walletData.currency} Wallet`,
         customer: walletData.customerId
@@ -109,7 +109,7 @@ class BitnobAPIService {
 
   async getCryptoWallet(walletId) {
     try {
-      const response = await this.client.get(`/v1/wallets/${walletId}`);
+      const response = await this.client.get(`/v1/wallets/crypto-wallet/trx/${walletId}`);
       return response.data;
     } catch (error) {
       throw this.handleError(error, 'Failed to fetch crypto wallet');
@@ -131,7 +131,7 @@ class BitnobAPIService {
 
   async sendBitcoin(transactionData) {
     try {
-      const response = await this.client.post('/v1/bitcoin/send', {
+      const response = await this.client.post('/v1/wallets/send_bitcoin', {
         customer: transactionData.customerId,
         address: transactionData.toAddress,
         amount: transactionData.amount,
@@ -155,7 +155,7 @@ class BitnobAPIService {
   // ===== LIGHTNING NETWORK =====
   async createLightningInvoice(invoiceData) {
     try {
-      const response = await this.client.post('/v1/ln/invoices', {
+      const response = await this.client.post('/v1/lnurl/createLnUrlWithdrawal', {
         customer: invoiceData.customerId,
         amount: invoiceData.amount,
         description: invoiceData.description || 'Lightning payment',
@@ -169,7 +169,7 @@ class BitnobAPIService {
 
   async payLightningInvoice(paymentData) {
     try {
-      const response = await this.client.post('/v1/ln/pay', {
+      const response = await this.client.post('/v1/lnurl/receiveLnUrlWithdrawal', {
         customer: paymentData.customerId,
         invoice: paymentData.invoice
       });
@@ -209,7 +209,7 @@ class BitnobAPIService {
   // ===== EXCHANGE RATES =====
   async getAllExchangeRates() {
     try {
-      const response = await this.client.get('/v1/exchange-rates');
+      const response = await this.client.get('/v1/wallets/payout/rates');
       return response.data;
     } catch (error) {
       throw this.handleError(error, 'Failed to fetch exchange rates');
@@ -218,7 +218,7 @@ class BitnobAPIService {
 
   async getExchangeRateByCurrency(currency) {
     try {
-      const response = await this.client.get(`/v1/exchange-rates/${currency}`);
+      const response = await this.client.get(`/v1/wallets/payout/rate/${currency}`);
       return response.data;
     } catch (error) {
       throw this.handleError(error, `Failed to fetch exchange rate for ${currency}`);
@@ -228,7 +228,7 @@ class BitnobAPIService {
   // ===== WALLET SWAPS =====
   async initializeUSDToBTCSwap(swapData) {
     try {
-      const response = await this.client.post('/v1/swap/usd-btc/initialize', {
+      const response = await this.client.post('/v1/api/wallets/initialize-swap-for-bitcoin', {
         customer: swapData.customerId,
         amount: swapData.amount
       });
@@ -240,13 +240,37 @@ class BitnobAPIService {
 
   async finalizeUSDToBTCSwap(swapId) {
     try {
-      const response = await this.client.post(`/v1/swap/usd-btc/finalize/${swapId}`);
+      const response = await this.client.post(`/v1/wallets/finalize-swap-for-bitcoin/${swapId}`);
       return response.data;
     } catch (error) {
       throw this.handleError(error, 'USD to BTC swap finalization failed');
     }
   }
 
+
+  // ===== BTC to USB =====
+  
+  async initializeBTCToUSDSwap(swapData) {
+    try {
+      const response = await this.client.post('/v1/api/wallets/initialize-swap-for-usd', {
+        customer: swapData.customerId,
+        amount: swapData.amount
+      });
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error, 'BTC to USD swap initialization failed');
+    }
+  }
+
+  
+  async finalizeBTCToUSDSwap(swapId) {
+    try {
+      const response = await this.client.post(`/v1/wallets/finalize-swap-for-usd/${swapId}`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error, 'BTC to USD swap finalization failed');
+    }
+  }
   // ===== ERROR HANDLING =====
   handleError(error, defaultMessage) {
     if (error.response) {

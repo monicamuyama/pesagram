@@ -91,14 +91,21 @@ app.use(errorHandler);
 // Start server
 const startServer = async () => {
   try {
-    // Connect to database
-    await connectToDatabase();
+    // Try to connect to database, but don't fail if it doesn't work
+    try {
+      await connectToDatabase();
+      console.log(`🗄️ Database: Connected to MongoDB Atlas`);
+    } catch (dbError) {
+      console.warn('⚠️ Database connection failed, starting server without DB:', dbError.message);
+      console.log('🔧 Server will start in offline mode for testing');
+    }
     
-    const server = app.listen(PORT, () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Pesagram Backend Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🌐 Health check: http://localhost:${PORT}/health`);
-      console.log(`🗄️ Database: Connected to MongoDB Atlas`);
+      console.log(`� Ready for mobile app testing at: http://192.168.1.154:${PORT}/api`);
+      console.log(`🔗 Server accessible from all network interfaces`);
     });
 
     // Graceful shutdown
