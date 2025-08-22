@@ -1,0 +1,123 @@
+name: Build and Test Flutter App
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+        
+    - name: Get dependencies
+      run: flutter pub get
+      
+    - name: Verify formatting
+      run: dart format --output=none --set-exit-if-changed .
+      
+    - name: Analyze project source
+      run: flutter analyze
+      
+    - name: Run tests
+      run: flutter test
+      
+  build-android:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+        
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+        
+    - name: Get dependencies
+      run: flutter pub get
+      
+    - name: Build APK
+      run: flutter build apk --release
+      
+    - name: Build App Bundle
+      run: flutter build appbundle --release
+      
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pesagram-android-apk
+        path: build/app/outputs/flutter-apk/app-release.apk
+        
+    - name: Upload App Bundle artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pesagram-android-aab
+        path: build/app/outputs/bundle/release/app-release.aab
+        
+  build-ios:
+    needs: test
+    runs-on: macos-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+        
+    - name: Get dependencies
+      run: flutter pub get
+      
+    - name: Build iOS (no code signing)
+      run: flutter build ios --release --no-codesign
+      
+  build-web:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+        
+    - name: Get dependencies
+      run: flutter pub get
+      
+    - name: Build web
+      run: flutter build web --release
+      
+    - name: Upload web build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pesagram-web-build
+        path: build/web/
