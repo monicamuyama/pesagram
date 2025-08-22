@@ -1,0 +1,614 @@
+{
+  "info": {
+    "name": "Pesagram API - Improved Bitnob Integration",
+    "description": "Comprehensive API testing collection for Pesagram e-banking system with proper Bitnob integration",
+    "version": "2.0.0",
+    "contact": {
+      "name": "Pesagram Development Team",
+      "email": "dev@pesagram.com"
+    }
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bitnobCustomerId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "walletId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@monikhangu.com\",\n  \"password\": \"SecurePass123!\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"+234901234567\",\n  \"countryCode\": \"+234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "signup"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sign In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@monikhangu.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/signin",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "signin"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "verify"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"SecurePass123!\",\n  \"newPassword\": \"NewSecurePass456!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "change-password"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🏦 Bitnob Customer Management",
+      "item": [
+        {
+          "name": "Create Customer (Direct Bitnob)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@monikhangu.com\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"phone\": \"9012345678\",\n  \"countryCode\": \"+234\"\n}"
+            },
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/customers",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "customers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              }
+            ],
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/customers/{{bitnobCustomerId}}",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "customers", "{{bitnobCustomerId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💰 Wallet Operations",
+      "item": [
+        {
+          "name": "Get Organization Wallets",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              }
+            ],
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/wallets",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "wallets"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Crypto Wallet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currency\": \"BTC\",\n  \"label\": \"My Bitcoin Wallet\",\n  \"customer\": \"{{bitnobCustomerId}}\"\n}"
+            },
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/wallets",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "wallets"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Crypto Wallet",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              }
+            ],
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/wallets/{{walletId}}",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "wallets", "{{walletId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "₿ Bitcoin Operations",
+      "item": [
+        {
+          "name": "Generate Bitcoin Address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": \"{{bitnobCustomerId}}\",\n  \"label\": \"Receiving Address\"\n}"
+            },
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/addresses/generate",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "addresses", "generate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Bitcoin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": \"{{bitnobCustomerId}}\",\n  \"address\": \"bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh\",\n  \"amount\": 0.001,\n  \"description\": \"Test Bitcoin transfer\"\n}"
+            },
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/bitcoin/send",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "bitcoin", "send"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Bitcoin Addresses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              }
+            ],
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/addresses?customer={{bitnobCustomerId}}",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "addresses"],
+              "query": [
+                {
+                  "key": "customer",
+                  "value": "{{bitnobCustomerId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "⚡ Lightning Network",
+      "item": [
+        {
+          "name": "Create Lightning Invoice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": \"{{bitnobCustomerId}}\",\n  \"amount\": 1000,\n  \"description\": \"Test Lightning payment\",\n  \"expiry\": 3600\n}"
+            },
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/ln/invoices",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "ln", "invoices"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pay Lightning Invoice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": \"{{bitnobCustomerId}}\",\n  \"invoice\": \"lnbc10u1p3pj257pp5yztkwjcvd5upmxanh48z8gf2fn5rq9t5a5j0yx7x7y7x7x7x7x7x7xsp5...\"\n}"
+            },
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/ln/pay",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "ln", "pay"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📊 Exchange Rates",
+      "item": [
+        {
+          "name": "Get All Exchange Rates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              }
+            ],
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/exchange-rates",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "exchange-rates"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Exchange Rate by Currency",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              }
+            ],
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/exchange-rates/NGN",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "exchange-rates", "NGN"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📊 Transactions",
+      "item": [
+        {
+          "name": "List Transactions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              }
+            ],
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/transactions?page=1&limit=20&customer={{bitnobCustomerId}}",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "transactions"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "customer",
+                  "value": "{{bitnobCustomerId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Transaction Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              }
+            ],
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/transactions/{transactionId}",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "transactions", "{transactionId}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔄 Wallet Swaps",
+      "item": [
+        {
+          "name": "Initialize USD to BTC Swap",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": \"{{bitnobCustomerId}}\",\n  \"amount\": 100\n}"
+            },
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/swap/usd-btc/initialize",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "swap", "usd-btc", "initialize"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Finalize USD to BTC Swap",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer sk.3a846ff0dfb8.7e7ddae08f05636a83433470b"
+              }
+            ],
+            "url": {
+              "raw": "https://sandboxapi.bitnob.co/api/v1/swap/usd-btc/finalize/{swapId}",
+              "protocol": "https",
+              "host": ["sandboxapi", "bitnob", "co"],
+              "path": ["api", "v1", "swap", "usd-btc", "finalize", "{swapId}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔔 Webhooks (Testing)",
+      "item": [
+        {
+          "name": "Test Webhook Endpoint",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-bitnob-signature",
+                "value": "test_signature"
+              },
+              {
+                "key": "x-bitnob-timestamp",
+                "value": "{{$timestamp}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"transaction.completed\",\n  \"data\": {\n    \"id\": \"txn_123456789\",\n    \"customer_id\": \"{{bitnobCustomerId}}\",\n    \"amount\": 0.001,\n    \"currency\": \"BTC\",\n    \"status\": \"completed\",\n    \"wallet_id\": \"wallet_123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/webhooks/bitnob",
+              "host": ["{{baseUrl}}"],
+              "path": ["webhooks", "bitnob"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Extract auth token from sign in response",
+          "if (pm.request.url.path.includes('signin') && pm.response.code === 200) {",
+          "    const responseJson = pm.response.json();",
+          "    if (responseJson.data && responseJson.data.token) {",
+          "        pm.collectionVariables.set('authToken', responseJson.data.token);",
+          "        console.log('Auth token saved:', responseJson.data.token);",
+          "    }",
+          "}",
+          "",
+          "// Extract Bitnob customer ID",
+          "if (pm.request.url.host.includes('bitnob') && pm.response.code === 200) {",
+          "    const responseJson = pm.response.json();",
+          "    if (responseJson.data && responseJson.data.id) {",
+          "        pm.collectionVariables.set('bitnobCustomerId', responseJson.data.id);",
+          "        console.log('Bitnob customer ID saved:', responseJson.data.id);",
+          "    }",
+          "}",
+          "",
+          "// Extract wallet ID",
+          "if (pm.request.url.path.includes('wallets') && pm.response.code === 200) {",
+          "    const responseJson = pm.response.json();",
+          "    if (responseJson.data && responseJson.data.id) {",
+          "        pm.collectionVariables.set('walletId', responseJson.data.id);",
+          "        console.log('Wallet ID saved:', responseJson.data.id);",
+          "    }",
+          "}"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+Application Overview
+This application is a cross-platform (Flutter) mobile wallet and payments system targeting African migrant workers, freelancers, and merchants. It leverages Bitnob APIs for secure, low-cost remittances, crypto (BTC, USDT) wallets, fiat on/off ramps, Lightning payments, and local currency (UGX) visualization. The aim is wide accessibility, regulatory compliance, a modern user experience, and robust integration with mobile money and merchant payouts.
+Core Features
+* User onboarding and minimal KYC (Bitnob compliance APIs)
+* Multi-asset wallets: BTC (on-chain and Lightning) and USDT
+* Real-time balances and equivalent view in UGX
+* Send/receive Bitcoin and stablecoins (including via Lightning)
+* Pay to mobile money, banks, or merchants (QR/phone number)
+* Recurring/scheduled payments
+* Simple asset swap (BTC <> USDT)
+* Spend analytics, transaction history, and receipts
+* Contact book for frequent payees
+* Push notifications and real-time updates
+* Biometric authentication and 2FA for sensitive actions
+* In-app support/help center and education tutorials
+* Multi-language (localization) and accessibility support
+Technical Architecture
+Frontend:
+* Flutter for Android/iOS
+* Bloc or Provider for state management
+* Key packages: Dio (API), flutter_bloc, flutter_secure_storage, local_auth, intl, mobile_scanner, charts_flutter, firebase_messaging
+Backend:
+* Node.js/Express REST API server (recommended)
+* PostgreSQL or MongoDB for persistence
+* Handles Bitnob API integration, price feeds, job scheduling, compliance logic, and user management
+Bitnob Integration:
+* Wallet creation, balance fetch, transaction and KYC APIs
+* Lightning invoice creation/payment, BTC & USDT send/receive
+* BTC <> USDT swap, real-time pricing for UGX display
+* Mobile money and bank payout endpoints
+Security/Compliance:
+* JWT/OAuth2 auth flows, encrypted API comms, secure key/data handling
+* KYC/AML via Bitnob
+* Real-time fraud/anomaly detection
+User Flows to Guide Cursor
+* New user registers (phone/email/social), verifies identity, and passes KYC as required by risk/compliance rules.
+* User is provisioned BTC and USDT wallets (on-chain + Lightning, USDT on supported chains).
+* Dashboard shows balances, UGX conversion, and trends.
+* User sends/receives BTC/USDT, or pays merchant/mobile money/QR—can use on-chain or Lightning rails.
+* Payments to phone number/QR triggers backend call to Bitnob for conversion/disbursement.
+* Scheduled or recurring payment logic for regular remittances.
+* Asset swap logic lets users switch BTC <> USDT at live rates.
+* All flows update transaction history and record receipts.
+* Biometric/2FA required for high-value or sensitive actions.
+API/Security Best Practices
+* Never put API secrets, Bitnob tokens, or kyc data in the frontend.
+* All Bitnob API requests routed via backend, which authenticates requests per user session.
+* Use flutter_secure_storage for sensitive tokens/pins; use local_auth for biometrics.
+* Regularly refresh exchange rates to display accurate UGX equivalents.
+Development/UX Guidelines
+* Modularize Flutter code: screens/, blocs/, services/, models/, widgets/.
+* Keep UI responsive and simple; show transaction and conversion fees upfront.
+* Use loading, error, and confirmation dialogs for all major network actions.
+* Structure test suites for both widget and full integration (state + API).
+* Localize all text and currency UI, ensure accessibility tags for core widgets.
+* Log and track transaction errors, user activity, and compliance events for support.
+Integration References
+* Main API spec: Bitnob Getting Started Docs
+* Lightning payment integration: refer to Lightning endpoints and invoice API usage per Bitnob docs.
+* Use Bitnob Flutter SDK where applicable for simplified wallet/payment flows.
